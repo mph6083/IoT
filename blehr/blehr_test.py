@@ -34,14 +34,13 @@ from tiny_test_fw import Utility
 # When running on local machine execute the following before running this script
 # > make app bootloader
 # > make print_flash_cmd | tail -n 1 > build/download.config
-# > export TEST_FW_PATH=~/esp/esp-idf/tools/tiny-test-fw
 
 
-def bleprph_client_task(dut, dut_addr):
+def blehr_client_task(hr_obj, dut, dut_addr):
     interface = 'hci0'
-    ble_devname = 'nimble-bleprph'
-    srv_uuid = '2f12'
-    write_value = b'A'
+    ble_devname = 'mhyland_heater'
+    hr_srv_uuid = '180d'
+    hr_char_uuid = '2a37'
 
     # Get BLE client module
     ble_client_obj = lib_ble_client.BLE_Bluez_Client(iface=interface)
@@ -63,34 +62,48 @@ def bleprph_client_task(dut, dut_addr):
     if not services:
         ble_client_obj.disconnect()
         return
-    # Verify service uuid exists
-    service_exists = ble_client_obj.get_service_if_exists(srv_uuid)
-    if not service_exists:
-        ble_client_obj.disconnect()
-        return
 
     # Get characteristics of the connected device
     ble_client_obj.get_chars()
 
-    # Read properties of characteristics (uuid, value and permissions)
-    ble_client_obj.read_chars()
-
-    # Write new value to characteristic having read and write permission
-    # and display updated value
-    write_char = ble_client_obj.write_chars(write_value)
-    if not write_char:
+    '''
+    Blehr application run:
+        Start Notifications
+        Retrieve updated value
+        Stop Notifications
+    '''
+    # Get service if exists
+    service = ble_client_obj.get_service_if_exists(hr_srv_uuid)
+    if service:
+        # Get characteristic if exists
+        char = ble_client_obj.get_char_if_exists(hr_char_uuid)
+        if not char:
+            ble_client_obj.disconnect()
+            return
+    else:
         ble_client_obj.disconnect()
         return
 
-    # Disconnect device
+    # Start Notify
+    # Read updated value
+    # Stop Notify
+    notify = ble_client_obj.start_notify(char)
+    if not notify:
+        ble_client_obj.disconnect()
+        return
+
+    # Check dut responses
+    dut.expect('subscribe event; cur_notify=1', timeout=30)
+    dut.expect('subscribe event; cur_notify=0', timeout=30)
+
+    # Call disconnect to perform cleanup operations before exiting application
     ble_client_obj.disconnect()
 
     # Check dut responses
-    dut.expect('connection established; status=0', timeout=30)
     dut.expect('disconnect;', timeout=30)
 
 
-class BlePrphThread(threading.Thread):
+class BleHRThread(threading.Thread):
     def __init__(self, dut, dut_addr, exceptions_queue):
         threading.Thread.__init__(self)
         self.dut = dut
@@ -99,49 +112,45 @@ class BlePrphThread(threading.Thread):
 
     def run(self):
         try:
-            bleprph_client_task(self.dut, self.dut_addr)
+            blehr_client_task(self, self.dut, self.dut_addr)
         except RuntimeError:
             self.exceptions_queue.put(traceback.format_exc(), block=False)
 
 
 @ttfw_idf.idf_example_test(env_tag='Example_WIFI_BT')
-def test_example_app_ble_peripheral(env, extra_data):
+def test_example_app_ble_hr(env, extra_data):
     """
         Steps:
             1. Discover Bluetooth Adapter and Power On
             2. Connect BLE Device
-            3. Read Services
-            4. Read Characteristics
-            5. Write Characteristics
+            3. Start Notifications
+            4. Updated value is retrieved
+            5. Stop Notifications
     """
     # Remove cached bluetooth devices of any previous connections
     subprocess.check_output(['rm', '-rf', '/var/lib/bluetooth/*'])
     subprocess.check_output(['hciconfig', 'hci0', 'reset'])
 
     # Acquire DUT
-    dut = env.get_dut('bleprph', 'examples/bluetooth/nimble/bleprph', dut_class=ttfw_idf.ESP32DUT)
+    dut = env.get_dut('blehr', 'examples/bluetooth/nimble/blehr', dut_class=ttfw_idf.ESP32DUT)
 
     # Get binary file
-    binary_file = os.path.join(dut.app.binary_path, 'bleprph.bin')
+    binary_file = os.path.join(dut.app.binary_path, 'blehr.bin')
     bin_size = os.path.getsize(binary_file)
-    ttfw_idf.log_performance('bleprph_bin_size', '{}KB'.format(bin_size // 1024))
+    ttfw_idf.log_performance('blehr_bin_size', '{}KB'.format(bin_size // 1024))
 
     # Upload binary and start testing
-    Utility.console_log('Starting bleprph simple example test app')
+    Utility.console_log('Starting blehr simple example test app')
     dut.start_app()
     dut.reset()
 
     # Get device address from dut
     dut_addr = dut.expect(re.compile(r'Device Address: ([a-fA-F0-9:]+)'), timeout=30)[0]
-
-    # Check dut responses
-    dut.expect('GAP procedure initiated: advertise;', timeout=30)
-
-    # Starting a py-client in a separate thread
     exceptions_queue = Queue.Queue()
-    bleprph_thread_obj = BlePrphThread(dut, dut_addr, exceptions_queue)
-    bleprph_thread_obj.start()
-    bleprph_thread_obj.join()
+    # Starting a py-client in a separate thread
+    blehr_thread_obj = BleHRThread(dut, dut_addr, exceptions_queue)
+    blehr_thread_obj.start()
+    blehr_thread_obj.join()
 
     exception_msg = None
     while True:
@@ -153,8 +162,8 @@ def test_example_app_ble_peripheral(env, extra_data):
             Utility.console_log('\n' + exception_msg)
 
     if exception_msg:
-        raise Exception('BlePrph thread did not run successfully')
+        raise Exception('Blehr thread did not run successfully')
 
 
 if __name__ == '__main__':
-    test_example_app_ble_peripheral()
+    test_example_app_ble_hr()

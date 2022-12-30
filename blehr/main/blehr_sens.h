@@ -17,27 +17,34 @@
  * under the License.
  */
 
-#include "bleprph.h"
+#ifndef H_BLEHR_SENSOR_
+#define H_BLEHR_SENSOR_
 
-/**
- * Utility function to log an array of bytes.
- */
-void
-print_bytes(const uint8_t *bytes, int len)
-{
-    int i;
+#include "nimble/ble.h"
+#include "modlog/modlog.h"
 
-    for (i = 0; i < len; i++) {
-        MODLOG_DFLT(INFO, "%s0x%02x", i != 0 ? ":" : "", bytes[i]);
-    }
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Heart-rate configuration */
+#define GATT_HRS_UUID                           0x180D
+#define GATT_HRS_MEASUREMENT_UUID               0x2A37
+#define GATT_HRS_BODY_SENSOR_LOC_UUID           0x2A38
+#define GATT_DEVICE_INFO_UUID                   0x180A
+#define GATT_MANUFACTURER_NAME_UUID             0x2A29
+#define GATT_MODEL_NUMBER_UUID                  0x2A24
+
+extern uint16_t hrs_hrm_handle;
+
+struct ble_hs_cfg;
+struct ble_gatt_register_ctxt;
+
+void gatt_svr_register_cb(struct ble_gatt_register_ctxt *ctxt, void *arg);
+int gatt_svr_init(void);
+
+#ifdef __cplusplus
 }
+#endif
 
-void
-print_addr(const void *addr)
-{
-    const uint8_t *u8p;
-
-    u8p = addr;
-    MODLOG_DFLT(INFO, "%02x:%02x:%02x:%02x:%02x:%02x",
-                u8p[5], u8p[4], u8p[3], u8p[2], u8p[1], u8p[0]);
-}
+#endif
