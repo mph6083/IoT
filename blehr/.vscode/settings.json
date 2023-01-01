@@ -15,6 +15,8 @@
   "files.associations": {
     "esp_spi_flash.h": "c",
     "ds18b20.h": "c",
-    "bitset": "c"
+    "bitset": "c",
+    "sstream": "c",
+    "regex": "c"
   },
 }

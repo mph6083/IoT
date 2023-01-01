@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+// #include "heatertest.h"
 
 #include "esp_log.h"
 #include "nvs_flash.h"
@@ -29,7 +30,10 @@
 #include "services/gap/ble_svc_gap.h"
 #include "blehr_sens.h"
 
-static const char *tag = "NimBLE_BLE_HeartRate";
+#include "heatertest.h"
+#include <math.h>
+
+static const char *tag = "NimBLE_BLE_Heater";
 
 static TimerHandle_t blehr_tx_timer;
 
@@ -37,29 +41,25 @@ static bool notify_state;
 
 static uint16_t conn_handle;
 
-static const char *device_name = "blehr_sensor_1.0";
+static const char *device_name = "Mhyland Heater";
 
 static int blehr_gap_event(struct ble_gap_event *event, void *arg);
 
 static uint8_t blehr_addr_type;
 
-/* Variable to simulate heart beats */
-static uint8_t heartrate = 90;
-
 /**
  * Utility function to log an array of bytes.
  */
-void
-print_bytes(const uint8_t *bytes, int len)
+void print_bytes(const uint8_t *bytes, int len)
 {
     int i;
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < len; i++)
+    {
         MODLOG_DFLT(INFO, "%s0x%02x", i != 0 ? ":" : "", bytes[i]);
     }
 }
 
-void
-print_addr(const void *addr)
+void print_addr(const void *addr)
 {
     const uint8_t *u8p;
 
@@ -67,7 +67,6 @@ print_addr(const void *addr)
     MODLOG_DFLT(INFO, "%02x:%02x:%02x:%02x:%02x:%02x",
                 u8p[5], u8p[4], u8p[3], u8p[2], u8p[1], u8p[0]);
 }
-
 
 /*
  * Enables advertising with parameters:
@@ -110,7 +109,8 @@ blehr_advertise(void)
     fields.name_is_complete = 1;
 
     rc = ble_gap_adv_set_fields(&fields);
-    if (rc != 0) {
+    if (rc != 0)
+    {
         MODLOG_DFLT(ERROR, "error setting advertisement data; rc=%d\n", rc);
         return;
     }
@@ -121,7 +121,8 @@ blehr_advertise(void)
     adv_params.disc_mode = BLE_GAP_DISC_MODE_GEN;
     rc = ble_gap_adv_start(blehr_addr_type, NULL, BLE_HS_FOREVER,
                            &adv_params, blehr_gap_event, NULL);
-    if (rc != 0) {
+    if (rc != 0)
+    {
         MODLOG_DFLT(ERROR, "error enabling advertisement; rc=%d\n", rc);
         return;
     }
@@ -130,7 +131,7 @@ blehr_advertise(void)
 static void
 blehr_tx_hrate_stop(void)
 {
-    xTimerStop( blehr_tx_timer, 1000 / portTICK_PERIOD_MS );
+    xTimerStop(blehr_tx_timer, 1000 / portTICK_PERIOD_MS);
 }
 
 /* Reset heart rate measurement */
@@ -139,41 +140,38 @@ blehr_tx_hrate_reset(void)
 {
     int rc;
 
-    if (xTimerReset(blehr_tx_timer, 1000 / portTICK_PERIOD_MS ) == pdPASS) {
+    if (xTimerReset(blehr_tx_timer, 1000 / portTICK_PERIOD_MS) == pdPASS)
+    {
         rc = 0;
-    } else {
+    }
+    else
+    {
         rc = 1;
     }
 
     assert(rc == 0);
-
 }
 
 /* This function simulates heart beat and notifies it to the client */
 static void
 blehr_tx_hrate(TimerHandle_t ev)
 {
-    static uint8_t hrm[2];
+    static uint8_t temp[2];
     int rc;
     struct os_mbuf *om;
 
-    if (!notify_state) {
+    if (!notify_state)
+    {
         blehr_tx_hrate_stop();
-        heartrate = 90;
         return;
     }
 
-    hrm[0] = 0x06; /* contact of a sensor */
-    hrm[1] = heartrate; /* storing dummy data */
+    temp[0] = 0x00; /* unsiged 16 bit number */
+    temp[1] = (int)get_Temp(); /* storing dummy data */
+    //temp[1] = 1;    /* storing dummy data */
 
-    /* Simulation of heart beats */
-    heartrate++;
-    if (heartrate == 160) {
-        heartrate = 90;
-    }
-
-    om = ble_hs_mbuf_from_flat(hrm, sizeof(hrm));
-    rc = ble_gattc_notify_custom(conn_handle, hrs_hrm_handle, om);
+    om = ble_hs_mbuf_from_flat(temp, sizeof(temp));
+    rc = ble_gattc_notify_custom(conn_handle, ess_tmp_handle, om);
 
     assert(rc == 0);
 
@@ -183,14 +181,16 @@ blehr_tx_hrate(TimerHandle_t ev)
 static int
 blehr_gap_event(struct ble_gap_event *event, void *arg)
 {
-    switch (event->type) {
+    switch (event->type)
+    {
     case BLE_GAP_EVENT_CONNECT:
         /* A new connection was established or a connection attempt failed */
         MODLOG_DFLT(INFO, "connection %s; status=%d\n",
                     event->connect.status == 0 ? "established" : "failed",
                     event->connect.status);
 
-        if (event->connect.status != 0) {
+        if (event->connect.status != 0)
+        {
             /* Connection failed; resume advertising */
             blehr_advertise();
         }
@@ -211,12 +211,15 @@ blehr_gap_event(struct ble_gap_event *event, void *arg)
 
     case BLE_GAP_EVENT_SUBSCRIBE:
         MODLOG_DFLT(INFO, "subscribe event; cur_notify=%d\n value handle; "
-                    "val_handle=%d\n",
-                    event->subscribe.cur_notify, hrs_hrm_handle);
-        if (event->subscribe.attr_handle == hrs_hrm_handle) {
+                          "val_handle=%d\n",
+                    event->subscribe.cur_notify, ess_tmp_handle);
+        if (event->subscribe.attr_handle == ess_tmp_handle)
+        {
             notify_state = event->subscribe.cur_notify;
             blehr_tx_hrate_reset();
-        } else if (event->subscribe.attr_handle != hrs_hrm_handle) {
+        }
+        else if (event->subscribe.attr_handle != ess_tmp_handle)
+        {
             notify_state = event->subscribe.cur_notify;
             blehr_tx_hrate_stop();
         }
@@ -228,7 +231,6 @@ blehr_gap_event(struct ble_gap_event *event, void *arg)
                     event->mtu.conn_handle,
                     event->mtu.value);
         break;
-
     }
 
     return 0;
@@ -274,7 +276,8 @@ void app_main(void)
 
     /* Initialize NVS — it is used to store PHY calibration data */
     esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
+    {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
@@ -286,7 +289,7 @@ void app_main(void)
     ble_hs_cfg.reset_cb = blehr_on_reset;
 
     /* name, period/time,  auto reload, timer ID, callback */
-    blehr_tx_timer = xTimerCreate("blehr_tx_timer", pdMS_TO_TICKS(1000), pdTRUE, (void *)0, blehr_tx_hrate);
+    blehr_tx_timer = xTimerCreate("ble_tx_timer", pdMS_TO_TICKS(1000), pdTRUE, (void *)0, blehr_tx_hrate);
 
     rc = gatt_svr_init();
     assert(rc == 0);
@@ -295,7 +298,8 @@ void app_main(void)
     rc = ble_svc_gap_device_name_set(device_name);
     assert(rc == 0);
 
+    init_heater();
+
     /* Start the task */
     nimble_port_freertos_init(blehr_host_task);
-
 }

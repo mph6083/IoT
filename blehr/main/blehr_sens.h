@@ -31,11 +31,21 @@ extern "C" {
 #define GATT_HRS_UUID                           0x180D
 #define GATT_HRS_MEASUREMENT_UUID               0x2A37
 #define GATT_HRS_BODY_SENSOR_LOC_UUID           0x2A38
+
+#define GATT_ESS_UUID                           0x181A
+#define GATT_ESS_TEMP_UUID                      0x2A6E
+#define BLE_ESS_CHAR_PROPS (BLE_GATT_CHR_PROP_READ | BLE_GATT_CHR_PROP_NOTIFY)
+
+#define GATT_HEATER_UUID                0xca53d127092b497abf0091099c3e262e
+#define GATT_HEATER_AIR_HEATER_UUID                0x060A
+#define BLE_HEATER_CHAR_PROPS (BLE_GATT_CHR_PROP_READ | BLE_GATT_CHR_PROP_WRITE)
+
+
 #define GATT_DEVICE_INFO_UUID                   0x180A
 #define GATT_MANUFACTURER_NAME_UUID             0x2A29
 #define GATT_MODEL_NUMBER_UUID                  0x2A24
 
-extern uint16_t hrs_hrm_handle;
+extern uint16_t ess_tmp_handle;
 
 struct ble_hs_cfg;
 struct ble_gatt_register_ctxt;
