@@ -1,0 +1,12 @@
+{
+  "defaultProject": "heater-client",
+  "projects": {
+    "heater-client": {
+      "name": "heater-client",
+      "integrations": {
+        "capacitor": {}
+      },
+      "type": "angular"
+    }
+  }
+}

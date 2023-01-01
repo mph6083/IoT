@@ -1,0 +1,52 @@
+
+#pageBackground{
+
+  height: 8000px;
+  width:100%;
+
+  background: #00b4db; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #00b4db, #0083b0); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #00b4db, #0083b0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+h1{margin:0;}
+#top-info{
+  padding-top:70px;
+  height:200px;
+}
+#TopTop{
+  height:70px;
+  position: fixed;
+  top:0;
+  right:0;
+  width:100%;
+  display: flex;
+  padding:15px;
+}
+#mainCard{
+  position: sticky !important;
+  top: 75px !important;
+  //width:100%;
+  margin:0 !important;
+  margin-top:40px;
+  padding:20px;
+
+  border-radius: 60px 60px 0 0 !important;
+}
+
+#tiles{
+  top:70px;
+
+  position: fixed;
+  display: flex;
+  width:100%;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  div{
+    width:70px;
+    min-width: 70px;
+    height:75px;
+    margin:5px;
+    background-color: teal;
+  }
+}
+
