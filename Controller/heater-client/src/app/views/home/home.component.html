@@ -1,68 +1,55 @@
 <ion-content>
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
 
-  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
+    <div id="thispage" class="gradient">
 
-  <div id="pageBackground">
-
-    <div id="top-info">
-      <div id="TopTop">
+      <div id="perm-top" class="gradient">
         <h1>Welcome User!</h1>
+        <ion-icon name="person-circle-outline"></ion-icon>
       </div>
-      <div id="main-container">
 
-        <div id="tiles">
+      <div id="quick_card_holder" class="gradient">
 
-            <div>
-              Saved Devices
-            </div>
-            <div>
-              New Adoption
-            </div>
-            <div>
-              Nearby Devices
-            </div>
-            <div>
-              Settings
-            </div>
+        <div>
+          <ion-icon name="add-circle-outline"></ion-icon>
+          <p>Adopt New</p>
+        </div>
+        <div>
+          <ion-icon name="create-outline"></ion-icon>
+          <p>Manage Saved</p>
+        </div>
+        <div>
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <p>Info</p>
+        </div>
+        <div>
+          <ion-icon name="settings-outline"></ion-icon>
+          <p>Settings</p>
         </div>
       </div>
+      <div id="pre-catch" class="gradient"></div>
+      <div id="flexing" >
+        <div id="catch1" >
+        </div>
+        <div id="catch2">
+        </div>
+      </div>
+
+
+      <div id="content">
+        <p>The element is positioned according to the normal flow of the document, and then offset relative to itself
+          based on the values of top, right, bottom, and left. The offset does not affect the position of any other
+          elements; thus, the space given for the element in the page layout is the same as if position were static.</p>
+        <p>The element is positioned according to the normal flow of the document, and then offset relative to itself
+          based on the values of top, right, bottom, and left. The offset does not affect the position of any other
+          elements; thus, the space given for the element in the page layout is the same as if position were static.</p>
+        <p>The element is positioned according to the normal flow of the document, and then offset relative to itself
+          based on the values of top, right, bottom, and left. The offset does not affect the position of any other
+          elements; thus, the space given for the element in the page layout is the same as if position were static.</p>
+        <h1>done</h1>
+      </div>
+
     </div>
-
-    <ion-card id="mainCard">
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec fermentum consequat libero, condimentum mollis
-        lectus sagittis eu. Suspendisse eget felis pellentesque, congue velit nec, commodo odio. Donec iaculis ante eu
-        neque aliquet, sed ultricies neque interdum. Maecenas vitae urna in nulla efficitur aliquam. Praesent quis
-        tristique sem, quis rutrum turpis. Morbi eu elementum leo. Donec a libero tellus. Aliquam erat volutpat. Lorem
-        ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat nibh metus, sed varius arcu dapibus eget.</p>
-      <p>Nunc lacus justo, pulvinar eu tortor vitae, finibus rhoncus nisl. Duis efficitur quam purus, et gravida libero
-        suscipit id. Donec interdum neque diam, eu tincidunt est mollis id. Phasellus in metus et purus vestibulum
-        porttitor. Nunc et nunc nec magna pellentesque pellentesque. Sed placerat, arcu at aliquet hendrerit, metus quam
-        sollicitudin massa, non aliquet ligula erat ullamcorper felis. Donec dapibus at dui id luctus. In tempor neque
-        vel ex tincidunt malesuada. Aenean molestie condimentum orci, non fermentum felis tristique id.</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec fermentum consequat libero, condimentum mollis
-        lectus sagittis eu. Suspendisse eget felis pellentesque, congue velit nec, commodo odio. Donec iaculis ante eu
-        neque aliquet, sed ultricies neque interdum. Maecenas vitae urna in nulla efficitur aliquam. Praesent quis
-        tristique sem, quis rutrum turpis. Morbi eu elementum leo. Donec a libero tellus. Aliquam erat volutpat. Lorem
-        ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat nibh metus, sed varius arcu dapibus eget.</p>
-      <p>Nunc lacus justo, pulvinar eu tortor vitae, finibus rhoncus nisl. Duis efficitur quam purus, et gravida libero
-        suscipit id. Donec interdum neque diam, eu tincidunt est mollis id. Phasellus in metus et purus vestibulum
-        porttitor. Nunc et nunc nec magna pellentesque pellentesque. Sed placerat, arcu at aliquet hendrerit, metus quam
-        sollicitudin massa, non aliquet ligula erat ullamcorper felis. Donec dapibus at dui id luctus. In tempor neque
-        vel ex tincidunt malesuada. Aenean molestie condimentum orci, non fermentum felis tristique id.</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec fermentum consequat libero, condimentum mollis
-        lectus sagittis eu. Suspendisse eget felis pellentesque, congue velit nec, commodo odio. Donec iaculis ante eu
-        neque aliquet, sed ultricies neque interdum. Maecenas vitae urna in nulla efficitur aliquam. Praesent quis
-        tristique sem, quis rutrum turpis. Morbi eu elementum leo. Donec a libero tellus. Aliquam erat volutpat. Lorem
-        ipsum dolor sit amet, consectetur adipiscing elit. Nullam feugiat nibh metus, sed varius arcu dapibus eget.</p>
-      <p>Nunc lacus justo, pulvinar eu tortor vitae, finibus rhoncus nisl. Duis efficitur quam purus, et gravida libero
-        suscipit id. Donec interdum neque diam, eu tincidunt est mollis id. Phasellus in metus et purus vestibulum
-        porttitor. Nunc et nunc nec magna pellentesque pellentesque. Sed placerat, arcu at aliquet hendrerit, metus quam
-        sollicitudin massa, non aliquet ligula erat ullamcorper felis. Donec dapibus at dui id luctus. In tempor neque
-        vel ex tincidunt malesuada. Aenean molestie condimentum orci, non fermentum felis tristique id.</p>
-    </ion-card>
-  </div>
-
-
-</ion-content>
+  </ion-content>

@@ -6,7 +6,9 @@ import { AppComponent } from './app.component';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
-
+import { environment } from 'src/environments/environment';
+import { BleServiceModule } from './services/ble/BleBluetooth.module';
+import { BleServiceMockModule } from './services/ble/BleMock.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,7 +18,8 @@ import { LoginComponent } from './views/login/login.component';
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
-    AppRoutingModule
+    AppRoutingModule,
+    environment.useMocks ? BleServiceMockModule : BleServiceModule
   ],
   providers: [],
   bootstrap: [AppComponent]
