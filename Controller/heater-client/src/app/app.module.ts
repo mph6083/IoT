@@ -9,17 +9,24 @@ import { LoginComponent } from './views/login/login.component';
 import { environment } from 'src/environments/environment';
 import { BleServiceModule } from './services/ble/BleBluetooth.module';
 import { BleServiceMockModule } from './services/ble/BleMock.module';
+import { HeaterControllerComponent } from './views/heater-controller/heater-controller.component';
+import { HeaterSvgComponent } from './components/heater-svg/heater-svg.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HomeComponent,
+    HeaterControllerComponent,
+    HeaterSvgComponent,
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    environment.useMocks ? BleServiceMockModule : BleServiceModule
+    environment.useMocks ? BleServiceMockModule : BleServiceModule,
+    NgxSliderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

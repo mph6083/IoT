@@ -1,0 +1,58 @@
+<ion-content>
+  <div id="thispage">
+    <div id="top-bar">
+      <ion-icon (click)="back()" name="arrow-back-outline"></ion-icon>
+      <!-- <h2>{{device?.nickname != undefined? device?.nickname : device?.productName}} </h2> -->
+      <h2>Heater Name</h2>
+      <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+    </div>
+
+    <div id="main-section">
+      <div id="temp-control" class="custom-slider">
+        <ngx-slider id="slider-style" [(value)]="verticalSlider1.value" [options]="verticalSlider1.options" (userChange)="onUserChange($event)"></ngx-slider>
+      </div>
+      <div id="inner-section">
+        <div id="heater-holder">
+          <app-heater-svg></app-heater-svg>
+        </div>
+        <div id="CurrentInfo">
+          <div id="CurrentTemp">
+            50&#8457;
+          </div>
+          <div id="IsOn">
+            Heater On
+          </div>
+        </div>
+        <div id="connection-info">
+          Signal Strength: -51Db, Degree Celcius:&#8451;
+        </div>
+      </div>
+
+      <div>
+
+      </div>
+    </div>
+
+    <div id="pre-catch" class="gradient"></div>
+    <div id="flexing">
+      <div id="catch1">
+      </div>
+      <div id="catch2">
+      </div>
+    </div>
+
+
+    <div id="content">
+      <h2>Monitoring:</h2>
+      <p id="bigSpace">
+        this is the way
+      </p>
+
+
+    </div>
+
+
+  </div>
+
+
+</ion-content>

@@ -71,11 +71,11 @@ static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
     {/* Service: Heart-rate */
      .type = BLE_GATT_SVC_TYPE_PRIMARY,
      //.uuid = BLE_UUID16_DECLARE(GATT_ESS_UUID),
-     .uuid = BLE_UUID16_DECLARE(GATT_ESS_UUID),
+     .uuid = BLE_UUID16_DECLARE(GATT_ESS_UUID), 
      .characteristics = (struct ble_gatt_chr_def[]){
          {
              /* Characteristic: Tempature Mesurement */
-             .uuid = BLE_UUID128_DECLARE(GATT_ESS_TEMP_UUID),
+             .uuid = BLE_UUID16_DECLARE(GATT_ESS_TEMP_UUID),
              .access_cb = gatt_svr_chr_access_heart_rate,
              .val_handle = &ess_tmp_handle,
              .flags = BLE_GATT_CHR_PROP_NOTIFY,
@@ -91,7 +91,7 @@ static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
      .uuid = BLE_UUID128_DECLARE(GATT_HEATER_UUID),
      .characteristics = (struct ble_gatt_chr_def[]){
          {
-             /* Characteristic: Tempature Mesurement */
+             /* Characteristic: Heater Controller */
              .uuid = BLE_UUID16_DECLARE(GATT_HEATER_AIR_HEATER_UUID),
              .access_cb = gatt_svr_chr_access_heater_setting,
              .flags = BLE_HEATER_CHAR_PROPS

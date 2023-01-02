@@ -69,7 +69,7 @@ export class BleBluetoothService extends BleService {
 
   startTempNotification(): Observable<number> {
     const serviceUUID = '181A';
-    const characteristicUUID = '2A6E';
+    const characteristicUUID = '00002A6E00001000800000805F9B34FB';
     return this.ble.startNotification(this.connectedDevice.id, serviceUUID, characteristicUUID).pipe(
       map((arrayWithBuffer) => {
         //3230303130303731303030303030
@@ -92,8 +92,8 @@ export class BleBluetoothService extends BleService {
   }
 
   setNewTemp(inputTemp: number): Promise<any> {
-    const serviceUUID = 'ca53d127092b497abf0091099c3e262e';
-    const caracteristicUUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+    const serviceUUID = 'FAEE6D88FB83338801065DF4E32A0000';
+    const caracteristicUUID = '00002A6E00001000800000805F9B34FB';
 
 
     // eslint-disable-next-line prefer-const
@@ -101,14 +101,6 @@ export class BleBluetoothService extends BleService {
     return this.ble.writeWithoutResponse(this.connectedDevice.id, serviceUUID, caracteristicUUID, setTempData);
   }
 
-
-  getNicknames() {
-    throw new Error('Method Not Implemented');
-  }
-
-  setNickname() {
-    throw new Error('Method Not Implemented');
-  }
 
 
   private setTempCodeGenerator(inputTemp: number): ArrayBufferLike {
@@ -133,7 +125,8 @@ export class BleBluetoothService extends BleService {
       onesPlace = digitArray[1];
     }
 
-    const outputString = `32353031303${hundredsPlace}3${tensPlace}3${onesPlace}303030303030`;
+    //todo:THIS
+    const outputString = ``;
 
     return this.hexStringToArrayBuffer(outputString);
 

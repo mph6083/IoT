@@ -36,7 +36,7 @@ extern "C" {
 #define GATT_ESS_TEMP_UUID                      0x2A6E
 #define BLE_ESS_CHAR_PROPS (BLE_GATT_CHR_PROP_READ | BLE_GATT_CHR_PROP_NOTIFY)
 
-#define GATT_HEATER_UUID                0x974b15c5899d44888b7c387c09633e7b
+#define GATT_HEATER_UUID                0x00, 0x00, 0x2a, 0xe3, 0xf4, 0x5d, 0x06, 0x01,0x88, 0x33, 0x83, 0xfb, 0x88, 0x6d, 0xee, 0xfa
 #define GATT_HEATER_AIR_HEATER_UUID                0x060A
 #define BLE_HEATER_CHAR_PROPS (BLE_GATT_CHR_PROP_READ | BLE_GATT_CHR_PROP_WRITE)
 

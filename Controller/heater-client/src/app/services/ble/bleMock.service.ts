@@ -27,6 +27,13 @@ export class BleMockService extends BleService {
         productName: 'Mhyland Heater',
         deviceType: DeviceType.Bluetooth,
       } as Device );
+      observer.next({
+        UUID: "F4:44:63:F6:DC:AD:AD:AD:AD:AD:AD:AD",
+        nickname: undefined,
+        status: DeviceStatus.Nearby_not_registered,
+        productName: 'Mhyland Heater',
+        deviceType: DeviceType.Bluetooth,
+      } as Device );
       observer.complete();
     });
   }
@@ -73,12 +80,7 @@ export class BleMockService extends BleService {
 
     return Promise.resolve();
   };
-  getNicknames() {
-    throw new Error('Method not implemented.');
-  }
-  setNickname() {
-    throw new Error('Method not implemented.');
-  }
+
 
   setDataAndStopScan(data:any){
     return ;

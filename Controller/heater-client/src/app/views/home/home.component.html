@@ -1,55 +1,68 @@
 <ion-content>
-    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
-      <ion-refresher-content></ion-refresher-content>
-    </ion-refresher>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-    <div id="thispage" class="gradient">
+  <div id="thispage" class="gradient">
 
-      <div id="perm-top" class="gradient">
-        <h1>Welcome User!</h1>
-        <ion-icon name="person-circle-outline"></ion-icon>
+    <div id="perm-top" class="gradient">
+      <h1>Welcome User!</h1>
+      <ion-icon name="person-circle-outline"></ion-icon>
+    </div>
+
+    <div id="quick_card_holder" class="gradient">
+
+      <div>
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <p>Adopt New</p>
       </div>
-
-      <div id="quick_card_holder" class="gradient">
-
-        <div>
-          <ion-icon name="add-circle-outline"></ion-icon>
-          <p>Adopt New</p>
-        </div>
-        <div>
-          <ion-icon name="create-outline"></ion-icon>
-          <p>Manage Saved</p>
-        </div>
-        <div>
-          <ion-icon name="information-circle-outline"></ion-icon>
-          <p>Info</p>
-        </div>
-        <div>
-          <ion-icon name="settings-outline"></ion-icon>
-          <p>Settings</p>
-        </div>
+      <div>
+        <ion-icon name="create-outline"></ion-icon>
+        <p>Manage Saved</p>
       </div>
-      <div id="pre-catch" class="gradient"></div>
-      <div id="flexing" >
-        <div id="catch1" >
-        </div>
-        <div id="catch2">
-        </div>
+      <div>
+        <ion-icon name="information-circle-outline"></ion-icon>
+        <p>Info</p>
       </div>
+      <div>
+        <ion-icon name="settings-outline"></ion-icon>
+        <p>Settings</p>
+      </div>
+    </div>
+    <div id="pre-catch" class="gradient"></div>
+    <div id="flexing">
+      <div id="catch1">
+      </div>
+      <div id="catch2">
+      </div>
+    </div>
 
+    <div id="content">
+      <h1>Devices:</h1>
+      <div *ngFor="let device of devices">
+        <ion-card (click)="openHeater(device.UUID)">
+          <div class="typeLogo">
+            <ion-icon *ngIf="device.deviceType == 0" name="bluetooth-outline"></ion-icon>
+            <ion-icon *ngIf="device.deviceType == 1" name="wifi-outline"></ion-icon>
+            <ion-icon *ngIf="device.deviceType == 2" name="globe-outline"></ion-icon>
+            <div *ngIf="device.deviceType == 3">
+              <ion-icon name="logo-amazon"></ion-icon>
+              <ion-icon name="wifi-outline"></ion-icon>
+            </div>
 
-      <div id="content">
-        <p>The element is positioned according to the normal flow of the document, and then offset relative to itself
-          based on the values of top, right, bottom, and left. The offset does not affect the position of any other
-          elements; thus, the space given for the element in the page layout is the same as if position were static.</p>
-        <p>The element is positioned according to the normal flow of the document, and then offset relative to itself
-          based on the values of top, right, bottom, and left. The offset does not affect the position of any other
-          elements; thus, the space given for the element in the page layout is the same as if position were static.</p>
-        <p>The element is positioned according to the normal flow of the document, and then offset relative to itself
-          based on the values of top, right, bottom, and left. The offset does not affect the position of any other
-          elements; thus, the space given for the element in the page layout is the same as if position were static.</p>
-        <h1>done</h1>
+          </div>
+          <h3>{{device.productName}}</h3>
+          <p>{{trimString(device.UUID)}}</p>
+          <div class="Status">
+            <span class="dot" [style.color]="getDotColor(device.status)">•</span>
+            <p>&nbsp;{{getStatusText(device.status)}}</p>
+          </div>
+
+        </ion-card>
+
       </div>
 
     </div>
-  </ion-content>
+
+  </div>
+</ion-content>

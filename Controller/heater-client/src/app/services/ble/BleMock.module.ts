@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BleService } from './ble.service';
-import { BleMockService } from './mock/bleMock.service';
+import { BleMockService } from './bleMock.service';
 
 @NgModule({
   providers: [

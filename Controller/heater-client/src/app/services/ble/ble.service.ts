@@ -22,10 +22,6 @@ export abstract class BleService {
 
   abstract setNewTemp(inputTemp: number): Promise<any>;
 
-  abstract getNicknames():any;
-
-  abstract setNickname():any;
-
   abstract setDataAndStopScan(data:any):any;
 
   abstract isEnabled(): Promise<void>;

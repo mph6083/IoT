@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { HeaterControllerComponent } from './views/heater-controller/heater-controller.component';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
-//import { HomeComponent } from './page/home/home.component';
 
 const routes: Routes = [
   {
@@ -13,6 +13,9 @@ const routes: Routes = [
   },
   {
     path: 'login', component: LoginComponent
+  },
+  {
+    path: 'HeatControl', component: HeaterControllerComponent
   }
 ];
 
