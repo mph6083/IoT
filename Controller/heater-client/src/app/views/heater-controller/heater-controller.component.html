@@ -2,14 +2,15 @@
   <div id="thispage">
     <div id="top-bar">
       <ion-icon (click)="back()" name="arrow-back-outline"></ion-icon>
-      <!-- <h2>{{device?.nickname != undefined? device?.nickname : device?.productName}} </h2> -->
-      <h2>Heater Name</h2>
+      <h2>{{device?.nickname != undefined? device?.nickname : device?.productName}} </h2>
       <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
     </div>
 
     <div id="main-section">
       <div id="temp-control" class="custom-slider">
-        <ngx-slider id="slider-style" [(value)]="verticalSlider1.value" [options]="verticalSlider1.options" (userChange)="onUserChange($event)"></ngx-slider>
+        <ngx-slider id="slider-style" [(value)]="verticalSlider1.value" [options]="verticalSlider1.options"
+          (userChangeEnd)="onUserChangeEnd($event)">
+          (userChange)="onUserChange($event)"></ngx-slider>
       </div>
       <div id="inner-section">
         <div id="heater-holder">
@@ -17,14 +18,16 @@
         </div>
         <div id="CurrentInfo">
           <div id="CurrentTemp">
-            50&#8457;
+            <h2>{{currentTemp}}&#8457;</h2>
+            <p>Current Temp</p>
           </div>
-          <div id="IsOn">
-            Heater On
+          <div id="heater_indicatior" [ngClass]="HeaterOnClass()">
+            <p>{{HeaterOnText()}}</p>
           </div>
         </div>
         <div id="connection-info">
-          Signal Strength: -51Db, Degree Celcius:&#8451;
+          {{connectionInfo()}}
+
         </div>
       </div>
 

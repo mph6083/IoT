@@ -5,11 +5,13 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { BleService } from './ble.service';
 import { Device, DeviceStatus, DeviceType } from "../../models/device.model";
+import { ThisReceiver } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BleBluetoothService extends BleService {
+
   private connectedDevice: any;
   private shouldStartScan = true;
   constructor(private ble: BLE, private router: Router) {
@@ -99,6 +101,11 @@ export class BleBluetoothService extends BleService {
     // eslint-disable-next-line prefer-const
     let setTempData = this.setTempCodeGenerator(inputTemp);
     return this.ble.writeWithoutResponse(this.connectedDevice.id, serviceUUID, caracteristicUUID, setTempData);
+  }
+  getLastTemp(): Promise<number> {
+    const serviceUUID = 'FAEE6D88FB83338801065DF4E32A0000';
+    const caracteristicUUID = '00002A6E00001000800000805F9B34FB';
+    return this.ble.read(this.connectedDevice.id, serviceUUID, caracteristicUUID);
   }
 
 

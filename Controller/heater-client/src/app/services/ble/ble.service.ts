@@ -1,8 +1,6 @@
 import { Observable } from 'rxjs';
 import { Device } from 'src/app/models/device.model';
-
 export abstract class BleService {
-
 
   abstract startScan(): Observable<Device>;
 
@@ -21,6 +19,7 @@ export abstract class BleService {
   abstract bluetoothIsConnected(): Promise<any>;
 
   abstract setNewTemp(inputTemp: number): Promise<any>;
+  abstract getLastTemp(): Promise<number>;
 
   abstract setDataAndStopScan(data:any):any;
 

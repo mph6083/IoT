@@ -9,6 +9,7 @@ import { BleService } from './ble.service';
 })
 export class BleMockService extends BleService {
 
+
   nextDeviceTemp = 0;
   nextDeviceArray: Array<number> | undefined = undefined;
   startScan(): Observable<Device> {
@@ -80,6 +81,13 @@ export class BleMockService extends BleService {
 
     return Promise.resolve();
   };
+  getLastTemp(): Promise<number> {
+    let lasttemp = 80;
+    if(this.nextDeviceArray && this.nextDeviceArray.length > 0){
+      lasttemp = this.nextDeviceArray[0];
+    }
+    return Promise.resolve(lasttemp);
+  }
 
 
   setDataAndStopScan(data:any){
