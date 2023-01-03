@@ -12,6 +12,7 @@ import { BleServiceMockModule } from './services/ble/BleMock.module';
 import { HeaterControllerComponent } from './views/heater-controller/heater-controller.component';
 import { HeaterSvgComponent } from './components/heater-svg/heater-svg.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
 
 @NgModule({
   declarations: [
@@ -26,9 +27,9 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     IonicModule.forRoot(),
     AppRoutingModule,
     environment.useMocks ? BleServiceMockModule : BleServiceModule,
-    NgxSliderModule
+    NgxSliderModule,
   ],
-  providers: [],
+  providers: [Vibration],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

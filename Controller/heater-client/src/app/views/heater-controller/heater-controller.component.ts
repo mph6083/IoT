@@ -4,6 +4,8 @@ import { Device, DeviceType } from 'src/app/models/device.model';
 import { DeviceManagerService } from 'src/app/services/deviceManager/device-manager.service';
 import { ChangeContext, Options } from '@angular-slider/ngx-slider';
 import { BleService } from 'src/app/services/ble/ble.service';
+import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
+
 @Component({
   selector: 'app-heater-controller',
   templateUrl: './heater-controller.component.html',
@@ -13,7 +15,8 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     public deviceManager: DeviceManagerService,
-    private ble: BleService
+    private ble: BleService,
+    private vibration: Vibration
   ) { }
 
   UUID: string | undefined;
@@ -59,6 +62,8 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     this.router.navigate(['home']);
   }
   onUserChange(changeContext: ChangeContext): void {
+    this.vibration.vibrate(200);
+
   }
   onUserChangeEnd(changeContext: ChangeContext): void {
     if (this.device?.deviceType == DeviceType.Bluetooth) {
