@@ -44,11 +44,9 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
       this.router.navigate(['home']);
     }
     console.log(this.device);
-
     if (this.device?.deviceType == DeviceType.Bluetooth) {
       this.setupBluetooth();
     }
-
 
   }
 

@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "add:android": "ng build"
+    "add:android": "ionic cap add android",
+    "trapeze": "trapeze run config.yaml -y",
+    "build:android": "ionic cap sync && npm run trapeze && ionic cap android open"
   },
   "private": true,
   "dependencies": {
@@ -29,6 +31,7 @@
     "@capacitor/status-bar": "4.1.1",
     "@ionic/angular": "^6.4.1",
     "@ionic/cordova-builders": "^7.0.0",
+    "@trapezedev/configure": "^7.0.2",
     "cordova-plugin-ble-central": "^1.6.1",
     "cordova-plugin-vibration": "^3.1.1",
     "rxjs": "~7.5.0",
