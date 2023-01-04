@@ -33,7 +33,7 @@ export class WifiHostService {
   }
 
   http_setTemp(temp:number){
-    this.http.post("192.168.4.1/heater","" + temp);
+    return this.http.post("192.168.4.1/heater","" + temp);
   }
   http_getSetTemp(){
     return this.http.get("192.168.4.1/heater");
