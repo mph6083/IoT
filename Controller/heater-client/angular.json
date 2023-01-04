@@ -118,7 +118,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "heater-client:build:production"
+              "browserTarget": "heater-client:build:production",
+              "sourceMap":true
             }
           }
         }

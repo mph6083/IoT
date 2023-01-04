@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "seunlanlege.action-buttons",
+        "ms-vscode.cpptools-extension-pack",
+        "espressif.esp-idf-extension"
+    ]
+}

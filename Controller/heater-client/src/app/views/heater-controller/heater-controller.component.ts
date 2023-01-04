@@ -22,8 +22,8 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
   UUID: string | undefined;
   device: Device | undefined;
   signalStrength: number = -63;
-  currentTemp = 58;
-  heaterSetPoint = 63;
+  currentTemp = -1;
+  heaterSetPoint = 0;
   ngOnInit(): void {
 
     setInterval(() => {
@@ -60,7 +60,7 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     this.router.navigate(['home']);
   }
   onUserChange(changeContext: ChangeContext): void {
-    this.vibration.vibrate(200);
+    //this.vibration.vibrate(200);
 
   }
   onUserChangeEnd(changeContext: ChangeContext): void {
@@ -85,14 +85,20 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
   setupBluetooth() {
     if (this.UUID){
       this.ble.connect(this.UUID).subscribe(async (ret) => {
+        this.ble.setDataAndStopScan(ret);
+        console.log({connected:"yes",ret});
+        console.log("connected")
         this.ble.getLastTemp().then( (value) =>{
+          console.log("got last temp")
           this.heaterSetPoint = value;
         });
-        setInterval(async () => {
-          this.heaterSetPoint = await this.ble.getLastTemp();
-        }, 2000);
+        // setInterval(async () => {
+        //   this.heaterSetPoint = await this.ble.getLastTemp();
+        //   console.log("got last temp recurring")
+        // }, 2000);
         this.ble.startTempNotification().subscribe((ret) => {
           this.currentTemp = ret;
+          console.log("recieved current temp")
         });
 
       });

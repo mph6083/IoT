@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "add:android": "ionic cap add android",
     "trapeze": "trapeze run config.yaml -y",
-    "build:android": "ionic cap sync && npm run trapeze && ionic cap android open"
+    "build:android": "ionic cap sync --prod && npm run trapeze && ionic cap open android"
   },
   "private": true,
   "dependencies": {
@@ -33,7 +33,6 @@
     "@ionic/cordova-builders": "^7.0.0",
     "@trapezedev/configure": "^7.0.2",
     "cordova-plugin-ble-central": "^1.6.1",
-    "cordova-plugin-vibration": "^3.1.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

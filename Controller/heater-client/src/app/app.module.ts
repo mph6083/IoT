@@ -13,6 +13,7 @@ import { HeaterControllerComponent } from './views/heater-controller/heater-cont
 import { HeaterSvgComponent } from './components/heater-svg/heater-svg.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
+import { BLE } from '@awesome-cordova-plugins/ble/ngx';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
     environment.useMocks ? BleServiceMockModule : BleServiceModule,
     NgxSliderModule,
   ],
-  providers: [Vibration],
+  providers: [ BLE,Vibration],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

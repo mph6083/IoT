@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { BleService } from './ble.service';
 import { Device, DeviceStatus, DeviceType } from "../../models/device.model";
-import { ThisReceiver } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +25,9 @@ export class BleBluetoothService extends BleService {
   startScan(): Observable<Device> {
     return this.ble.startScan([]).pipe(
       map(device => {
+        if (device.name == "Mhyland Heater") {
+          console.log(device);
+        }
         return {
           UUID: device.id,
           nickname: undefined,
@@ -49,7 +51,9 @@ export class BleBluetoothService extends BleService {
   }
 
   connect(deviceId: string): Observable<any> {
+    console.log("connect observable create");
     const connectObservable = this.ble.connect(deviceId);
+    console.log("connect observable created");
     return connectObservable;
   }
 
@@ -71,13 +75,11 @@ export class BleBluetoothService extends BleService {
 
   startTempNotification(): Observable<number> {
     const serviceUUID = '181A';
-    const characteristicUUID = '00002A6E00001000800000805F9B34FB';
+    const characteristicUUID = '00002a6e-0000-1000-8000-00805f9b34fb';
     return this.ble.startNotification(this.connectedDevice.id, serviceUUID, characteristicUUID).pipe(
       map((arrayWithBuffer) => {
-        //3230303130303731303030303030
-        const bufferHexArray: string[] = this.bufferToHex(arrayWithBuffer[0]).split('');
-        const readTemp = parseInt(bufferHexArray[11] + bufferHexArray[13] + bufferHexArray[15], 10);
-        return readTemp;
+        const returnValue = (new Int8Array(arrayWithBuffer[0] as ArrayBuffer))[1];
+        return returnValue;
       })
     );
   }
@@ -94,51 +96,23 @@ export class BleBluetoothService extends BleService {
   }
 
   setNewTemp(inputTemp: number): Promise<any> {
-    const serviceUUID = 'FAEE6D88FB83338801065DF4E32A0000';
-    const caracteristicUUID = '00002A6E00001000800000805F9B34FB';
-
+    const serviceUUID = "faee6d88-fb83-3388-0106-5df4e32a0000";
+    const caracteristicUUID = "0000060a-0000-1000-8000-00805f9b34fb";
 
     // eslint-disable-next-line prefer-const
-    let setTempData = this.setTempCodeGenerator(inputTemp);
+    const inputhex = inputTemp.toString(16);
+    console.log({inputhex:inputhex})
+    const setTempData = this.hexStringToArrayBuffer(inputhex);
     return this.ble.writeWithoutResponse(this.connectedDevice.id, serviceUUID, caracteristicUUID, setTempData);
   }
-  getLastTemp(): Promise<number> {
-    const serviceUUID = 'FAEE6D88FB83338801065DF4E32A0000';
-    const caracteristicUUID = '00002A6E00001000800000805F9B34FB';
-    return this.ble.read(this.connectedDevice.id, serviceUUID, caracteristicUUID);
+  async getLastTemp(): Promise<number> {
+    const serviceUUID = "faee6d88-fb83-3388-0106-5df4e32a0000";
+    const caracteristicUUID = "0000060a-0000-1000-8000-00805f9b34fb";
+    const readVal =  await this.ble.read(this.connectedDevice.id, serviceUUID, caracteristicUUID)
+    const intarray = new Int8Array(readVal as ArrayBuffer)
+    console.log({lastTempA:intarray[0]});
+    return intarray[0];
   }
-
-
-
-  private setTempCodeGenerator(inputTemp: number): ArrayBufferLike {
-    inputTemp = Math.round(inputTemp); //make sure temp is a whole number
-
-    inputTemp = inputTemp < 35 ? 35 : inputTemp; //if under 35 round up
-    inputTemp = inputTemp > 105 ? 105 : inputTemp; // if over 105 round down
-
-    const digitArray: string[] = inputTemp.toString().split('');
-
-    let hundredsPlace: string = '';
-    let tensPlace: string = '';
-    let onesPlace: string = '';
-    if (digitArray.length === 3) {
-      hundredsPlace = '1';
-      tensPlace = digitArray[1];
-      onesPlace = digitArray[2];
-    }
-    else if (digitArray.length === 2) {
-      hundredsPlace = '0';
-      tensPlace = digitArray[0];
-      onesPlace = digitArray[1];
-    }
-
-    //todo:THIS
-    const outputString = ``;
-
-    return this.hexStringToArrayBuffer(outputString);
-
-  }
-
 
   private hexStringToArrayBuffer(hexString: string) {
 
