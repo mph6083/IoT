@@ -18,6 +18,10 @@
     "bitset": "c",
     "sstream": "c",
     "regex": "c",
-    "event_groups.h": "c"
+    "event_groups.h": "c",
+    "esp_system.h": "c",
+    "esp_event_loop.h": "c",
+    "param.h": "c",
+    "esp_netif.h": "c"
   },
 }

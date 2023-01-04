@@ -14,7 +14,8 @@ import { HeaterSvgComponent } from './components/heater-svg/heater-svg.component
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
 import { BLE } from '@awesome-cordova-plugins/ble/ngx';
-
+import { WifiWizard2 } from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,8 +30,9 @@ import { BLE } from '@awesome-cordova-plugins/ble/ngx';
     AppRoutingModule,
     environment.useMocks ? BleServiceMockModule : BleServiceModule,
     NgxSliderModule,
+    HttpClientModule,
   ],
-  providers: [ BLE,Vibration],
+  providers: [ BLE,Vibration,WifiWizard2],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

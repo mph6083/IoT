@@ -30,7 +30,7 @@ void toggleHeater(bool on)
 void set_TargetTemp(uint8_t newTemp)
 {
     TargetTemp = newTemp;
-    ESP_LOGI(TAG, "new Target Temp is: %i", newTemp);
+    //ESP_LOGI(TAG, "new Target Temp is: %i", newTemp);
 }
 uint8_t get_TargetTemp()
 {
@@ -52,13 +52,13 @@ static void poll_temp()
     {
         currentTemp = 50;
     }
-    ESP_LOGI(TAG, "Temp Read %f", currentTemp);
+    //ESP_LOGI(TAG, "Temp Read %f", currentTemp);
     // currentTemp = ds18b20_get_temp();
 }
 
 static void heat_controller()
 {
-    ESP_LOGI(TAG, "Polled the Heat Controller");
+    //ESP_LOGI(TAG, "Polled the Heat Controller");
     if (currentTemp <= get_TargetTemp() - 1)
     {
         toggleHeater(true);
