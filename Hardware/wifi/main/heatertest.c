@@ -4,7 +4,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/timers.h"
-
+#include <stdbool.h>
 // #include "ds18b20.h" //temp sensor
 
 #include "driver/gpio.h" //turn on and off pins

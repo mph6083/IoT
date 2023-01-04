@@ -4,7 +4,7 @@
  */
 
 #define espsecond (1000 * 1) / portTICK_PERIOD_MS
-
+#include <stdbool.h>
 
 /** 
  * initalize the heater pins and background processes 

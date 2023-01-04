@@ -17,6 +17,7 @@
     "ds18b20.h": "c",
     "bitset": "c",
     "sstream": "c",
-    "regex": "c"
+    "regex": "c",
+    "event_groups.h": "c"
   },
 }
