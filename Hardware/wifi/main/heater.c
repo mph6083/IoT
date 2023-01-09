@@ -96,9 +96,9 @@ void init_heater()
     if(shouldMock == false){
         ds18b20_init(DS_PIN);
     }
-    TimerHandle_t pollTimer = xTimerCreate("Timer", espsecond, pdTRUE, NULL, poll_temp);
+    TimerHandle_t pollTimer = xTimerCreate("Poll Temp", espsecond, pdTRUE, NULL, poll_temp);
     xTimerStart(pollTimer, 0);
 
-    TimerHandle_t heatControlTimer = xTimerCreate("Timer2", espsecond * 5, pdTRUE, NULL, heat_controller);
+    TimerHandle_t heatControlTimer = xTimerCreate("Update Heat Controls", espsecond * 5, pdTRUE, NULL, heat_controller);
     xTimerStart(heatControlTimer, 0);
 }
