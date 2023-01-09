@@ -1,2 +1,2 @@
-idf_component_register(SRCS "heater.c" "main.c" "ds18b20.c"
+idf_component_register(SRCS  "main.c"  "heater/heater.c" "heater/ds18b20.c" 
                     INCLUDE_DIRS ".")

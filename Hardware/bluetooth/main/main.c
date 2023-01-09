@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-// #include "heatertest.h"
 
 #include "esp_log.h"
 #include "nvs_flash.h"
@@ -30,7 +29,7 @@
 #include "services/gap/ble_svc_gap.h"
 #include "blehr_sens.h"
 
-#include "heatertest.h"
+#include "heater/heater.h"
 #include <math.h>
 
 static const char *tag = "NimBLE_BLE_Heater";

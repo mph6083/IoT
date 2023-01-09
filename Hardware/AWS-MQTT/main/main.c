@@ -28,9 +28,8 @@
 #include "esp_http_server.h"
 #include "lwip/ip4_addr.h"
 #include <stdio.h>
+#include "heatertest.h"
 
-
-#include "heater/heater.h"
 
 /* The examples use WiFi configuration that you can set via project configuration menu.
    If you'd rather not, just change the below entries to strings with
