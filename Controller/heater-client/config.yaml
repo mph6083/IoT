@@ -5,10 +5,8 @@ platforms:
         plist:
           - replace: true
             entries:
-              - NSBluetoothPeripheralUsageDescription:
-                  - Connection to peripherals requires bluetooth control
-              - NSBluetoothAlwaysUsageDescription:
-                  - Connection to peripherals requires bluetooth control
+              - NSBluetoothPeripheralUsageDescription: Connection to peripherals requires bluetooth control
+              - NSBluetoothAlwaysUsageDescription: Connection to peripherals requires bluetooth control
   android:
     manifest:
       - file: AndroidManifest.xml
@@ -19,4 +17,11 @@ platforms:
             <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
             <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
             <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+            <uses-permission android:name="android.permission.INTERNET" />
+            <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+            <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" />
+            <uses-feature android:name="android.hardware.location.gps" />
           </manifest>

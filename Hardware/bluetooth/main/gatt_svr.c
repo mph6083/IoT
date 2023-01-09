@@ -26,7 +26,7 @@
 #include "services/gatt/ble_svc_gatt.h"
 #include "blehr_sens.h"
 #include "esp_log.h"
-#include "heatertest.h"
+#include "heater/heater.h"
 
 static const char *tag = "NimBLE_BLE_Heater";
 

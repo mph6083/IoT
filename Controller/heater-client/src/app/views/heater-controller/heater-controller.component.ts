@@ -5,6 +5,7 @@ import { DeviceManagerService } from 'src/app/services/deviceManager/device-mana
 import { ChangeContext, Options } from '@angular-slider/ngx-slider';
 import { BleService } from 'src/app/services/ble/ble.service';
 import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
+import { LoadingController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-heater-controller',
@@ -16,7 +17,9 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     private router: Router,
     public deviceManager: DeviceManagerService,
     private ble: BleService,
-    private vibration: Vibration
+    private vibration: Vibration,
+    private loadingController: LoadingController,
+    private toastController: ToastController,
   ) { }
 
   UUID: string | undefined;
@@ -37,10 +40,12 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     this.UUID = (this.router.getCurrentNavigation()?.extras?.state as any)?.data;
     console.log(this.UUID);
     if (this.UUID == undefined) {
+      this.presentDisconnectErrorToast();
       this.router.navigate(['home']);
     }
     this.device = this.deviceManager.deviceList.get(this.UUID!);
     if (this.device == undefined) {
+      this.presentDisconnectErrorToast();
       this.router.navigate(['home']);
     }
     console.log(this.device);
@@ -51,7 +56,7 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.device?.deviceType == DeviceType.Bluetooth) {
+    if (this.device?.deviceType == DeviceType.Bluetooth) {
       this.ble.disconnect();
     }
   }
@@ -82,37 +87,87 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     return 'Heater Off';
   }
 
-  setupBluetooth() {
-    if (this.UUID){
+  async setupBluetooth() {
+    const loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Attempting Connection',
+      duration: 20000
+    });
+    await loading.present();
+
+    if (this.UUID) {
       this.ble.connect(this.UUID).subscribe(async (ret) => {
-        this.ble.setDataAndStopScan(ret);
-        console.log({connected:"yes",ret});
-        console.log("connected")
-        this.ble.getLastTemp().then( (value) =>{
-          console.log("got last temp")
-          this.heaterSetPoint = value;
-        });
-        // setInterval(async () => {
-        //   this.heaterSetPoint = await this.ble.getLastTemp();
-        //   console.log("got last temp recurring")
-        // }, 2000);
-        this.ble.startTempNotification().subscribe((ret) => {
-          this.currentTemp = ret;
-          console.log("recieved current temp")
+        loading.dismiss();
+        this.bleOnConnect(ret);
+      }, (onReject) => {
+        if (this.UUID) {
+          this.ble.connect(this.UUID).subscribe(async (ret) => {
+            loading.dismiss();
+            this.bleOnConnect(ret);
+          }, (onReject2) => {
+            loading.dismiss();
+            this.presentDisconnectErrorToast();
+            this.router.navigate(['home']);
+          });
+        }
+        else {
+          loading.dismiss();
+          this.presentDisconnectErrorToast();
+          this.router.navigate(['home']);
+        }
+      });
+
+    }
+    else {
+      loading.dismiss();
+      this.presentDisconnectErrorToast();
+      this.router.navigate(['home']);
+    }
+  }
+
+  async bleOnConnect(ret: any) {
+    this.ble.setDataAndStopScan(ret);
+    console.log({ connected: "yes", ret });
+    console.log("connected");
+    this.ble.getLastTemp().then((value) => {
+      console.log("got last temp");
+      this.heaterSetPoint = value;
+    });
+    // setInterval(async () => {
+    //   this.heaterSetPoint = await this.ble.getLastTemp();
+    //   console.log("got last temp recurring")
+    // }, 2000);
+    this.ble.startTempNotification().subscribe((ret) => {
+      this.currentTemp = ret;
+      console.log("recieved current temp");
+    });
+
+    setInterval(() => {
+      this.ble.bluetoothIsConnected().then(() => { },
+        (rejected) => {
+          this.presentDisconnectErrorToast();
+          this.router.navigate(['home']);
         });
 
-      });
-    }
+    }, 2000);
 
   }
 
-  connectionInfo(){
-    if(this.device?.deviceType == DeviceType.Bluetooth || this.device?.deviceType == DeviceType.Wifi_Host){
-       return "Signal Strength: " + this.signalStrength + "Db";
+  connectionInfo() {
+    if (this.device?.deviceType == DeviceType.Bluetooth || this.device?.deviceType == DeviceType.Wifi_Host) {
+      return "Signal Strength: " + this.signalStrength + "Db";
     }
-    else{
-      return "Hello Dolly!"
+    else {
+      return "Hello Dolly!";
     }
+  }
+
+  async presentDisconnectErrorToast() {
+    const toast = await this.toastController.create({
+      message: 'Device encountered an error please try connecting again.',
+      duration: 2000
+    });
+    toast.present();
   }
 
   verticalSlider1: SimpleSliderModel = {

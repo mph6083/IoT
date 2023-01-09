@@ -25,7 +25,13 @@ export class WifiHostService {
     this.wifiWizard2.disable(ssid);
   }
   wifi_scanNetworks(){
-    return this.wifiWizard2.scan()
+    return this.wifiWizard2.scan();
+  }
+  wifi_requestPermission(){
+    return this.wifiWizard2.requestPermission()
+  }
+  wifi_isEnabled(){
+    return this.wifiWizard2.isWifiEnabled();
   }
 
   wifi_connect(){

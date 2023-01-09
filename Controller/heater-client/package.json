@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "add:android": "ionic cap add android",
     "trapeze": "trapeze run config.yaml -y",
-    "build:android": "ionic cap sync --prod && npm run trapeze && ionic cap open android"
+    "build:android": "ionic cap sync && npm run trapeze && ionic cap open android"
   },
   "private": true,
   "dependencies": {
@@ -22,11 +22,13 @@
     "@angular/platform-browser-dynamic": "^15.0.0",
     "@angular/router": "^15.0.0",
     "@awesome-cordova-plugins/ble": "^6.3.0",
+    "@awesome-cordova-plugins/core": "^6.3.0",
     "@awesome-cordova-plugins/vibration": "^6.3.0",
     "@awesome-cordova-plugins/wifi-wizard-2": "^6.3.0",
     "@capacitor/android": "4.6.1",
     "@capacitor/app": "4.1.1",
     "@capacitor/core": "4.6.1",
+    "@capacitor/geolocation": "^4.1.0",
     "@capacitor/haptics": "4.1.0",
     "@capacitor/keyboard": "4.1.0",
     "@capacitor/status-bar": "4.1.1",
@@ -34,6 +36,10 @@
     "@ionic/cordova-builders": "^7.0.0",
     "@trapezedev/configure": "^7.0.2",
     "cordova-plugin-ble-central": "^1.6.1",
+    "cordova-plugin-wifiwizard2": "^3.1.1",
+    "es6-promise-plugin": "^4.2.2",
+    "i": "^0.3.7",
+    "npm": "^9.2.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
