@@ -6,6 +6,9 @@
 #define espsecond (1000 * 1) / portTICK_PERIOD_MS
 #include <stdbool.h>
 
+
+#define shouldMock true
+
 /** 
  * initalize the heater pins and background processes 
 */
