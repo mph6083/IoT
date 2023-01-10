@@ -5,7 +5,10 @@ import { DeviceManagerService } from 'src/app/services/deviceManager/device-mana
 import { ChangeContext, Options } from '@angular-slider/ngx-slider';
 import { BleService } from 'src/app/services/ble/ble.service';
 import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
-import { LoadingController, ToastController } from '@ionic/angular';
+import { LoadingController, ToastController,AlertController } from '@ionic/angular';
+import { WifiHostService } from 'src/app/services/wifiHost/wifi-host.service';
+import { HttpResponse } from '@angular/common/http';
+import { OpenNativeSettings } from '@awesome-cordova-plugins/open-native-settings'
 
 @Component({
   selector: 'app-heater-controller',
@@ -20,6 +23,8 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     private vibration: Vibration,
     private loadingController: LoadingController,
     private toastController: ToastController,
+    private wifi: WifiHostService,
+    private alertController:AlertController
   ) { }
 
   UUID: string | undefined;
@@ -49,8 +54,18 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
       this.router.navigate(['home']);
     }
     console.log(this.device);
-    if (this.device?.deviceType == DeviceType.Bluetooth) {
-      this.setupBluetooth();
+    if (this.device) {
+      switch (this.device.deviceType) {
+        case DeviceType.Bluetooth:
+          this.setupBluetooth();
+          break;
+        case DeviceType.Wifi_Host:
+          this.setupWifiHost();
+          break;
+        default:
+          console.log("ERROR?");
+          break;
+      }
     }
 
   }
@@ -59,18 +74,23 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     if (this.device?.deviceType == DeviceType.Bluetooth) {
       this.ble.disconnect();
     }
+    if (this.device?.deviceType == DeviceType.Wifi_Host) {
+      //this.wifi.wifi_disconnect("Mhyland Heater");
+    }
   }
 
   back() {
     this.router.navigate(['home']);
   }
-  onUserChange(changeContext: ChangeContext): void {
-    //this.vibration.vibrate(200);
 
-  }
   onUserChangeEnd(changeContext: ChangeContext): void {
+    console.log(this.device?.deviceType)
     if (this.device?.deviceType == DeviceType.Bluetooth) {
       this.ble.setNewTemp(changeContext.value);
+      console.log("setting Temp");
+    }
+    if (this.device?.deviceType == DeviceType.Wifi_Host) {
+      this.wifi.http_setTemp(changeContext.value);
       console.log("setting Temp");
     }
   }
@@ -87,6 +107,60 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     return 'Heater Off';
   }
 
+//     suggestConnection(ssid: string | number, password?:string, algorithm?: string, isHiddenSSID?:boolean): Promise<any>
+
+async presentAlert() {
+  const alert = await this.alertController.create({
+    header: 'Direct Connection Unsupported',
+    message: 'Please select the "Mhyland Heater" wifi in settings to proceed!',
+    buttons: ['OK'],
+
+  });
+
+  await alert.present();
+  await alert.onDidDismiss();
+}
+  async setupWifiHost() {
+
+      if (this.UUID) {
+        let currentWifi = await this.wifi.wifi_isConnected();
+        if (currentWifi != "Mhyland Heater") {
+          console.log(currentWifi);
+          //await this.wifi.wifi_disconnect(currentWifi);
+          //await this.wifi.wifi_connect();
+          await this.presentAlert();
+          await OpenNativeSettings.open("wifi");
+        }
+        if (currentWifi != "Mhyland Heater") {
+          this.WrongWifiErrorToast();
+          this.router.navigate(['home']);
+        }
+
+        this.wifi.http_getSetTemp().subscribe( (data:any ) => {
+          this.heaterSetPoint = Number(data);
+        });
+        let timer = setInterval(async () => {
+          let currentWifi = await this.wifi.wifi_isConnected();
+          if(currentWifi != "Mhyland Heater"){
+            this.presentDisconnectErrorToast();
+            clearInterval(timer);
+            this.router.navigate(['home']);
+
+          }
+        }, 5000);
+        setInterval(async () => {
+          this.wifi.http_getTemp().subscribe( (response:any) => {
+            console.log(response)
+            this.currentTemp = Number(response);
+          })
+        }, 5000);
+      }
+      else {
+        this.presentDisconnectErrorToast();
+        this.router.navigate(['home']);
+      }
+
+  }
   async setupBluetooth() {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
@@ -166,6 +240,13 @@ export class HeaterControllerComponent implements OnInit, OnDestroy {
     const toast = await this.toastController.create({
       message: 'Device encountered an error please try connecting again.',
       duration: 2000
+    });
+    toast.present();
+  }
+  async WrongWifiErrorToast() {
+    const toast = await this.toastController.create({
+      message: 'Direct Connection Unsupported, Please go to settings and connect directly to Mhyland Heater Wifi.',
+      duration: 10000
     });
     toast.present();
   }

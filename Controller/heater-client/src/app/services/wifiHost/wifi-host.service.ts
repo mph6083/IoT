@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { WifiWizard2 } from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
 import { HttpClient } from '@angular/common/http';
+import { Device, DeviceStatus, DeviceType } from 'src/app/models/device.model';
+import { WifiWizard2 } from '@awesome-cordova-plugins/wifi-wizard-2/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -10,22 +11,23 @@ export class WifiHostService {
   constructor(private wifiWizard2: WifiWizard2, private http: HttpClient ) { }
 
   async wifi_isConnected(){
-    let ssid: string | undefined;
-    try{
-      let x = await this.wifiWizard2.getConnectedSSID();
-      console.log({x});
-      ssid = x;
-    }
-    catch{
-      ssid = undefined;
-    }
-    return ssid;
+    return this.wifiWizard2.getConnectedSSID();
   }
   wifi_disconnect(ssid:string){
     this.wifiWizard2.disable(ssid);
   }
-  wifi_scanNetworks(){
-    return this.wifiWizard2.scan();
+  async wifi_scanNetworks(): Promise<Array<Device>>{
+    const devices = await this.wifiWizard2.scan();
+    console.log(devices);
+    return devices.map( (device:any) => {
+      return {
+        UUID: device.SSID,
+        nickname: undefined,
+        status: DeviceStatus.Nearby_not_registered,
+        productName: device.SSID,
+        deviceType: DeviceType.Wifi_Host,
+      }
+    })
   }
   wifi_requestPermission(){
     return this.wifiWizard2.requestPermission()
@@ -35,17 +37,17 @@ export class WifiHostService {
   }
 
   wifi_connect(){
-    return this.wifiWizard2.connect("Mhyland Heater",true,"password","WPA");
+    return this.wifiWizard2.suggestConnection("Mhyland Heater");
   }
 
   http_setTemp(temp:number){
-    return this.http.post("192.168.4.1/heater","" + temp);
+    return this.http.post("http://192.168.4.1/heater","" + temp).subscribe();
   }
   http_getSetTemp(){
-    return this.http.get("192.168.4.1/heater");
+    return this.http.get("http://192.168.4.1/heater");
   }
   http_getTemp(){
-    return this.http.get("192.168.4.1/temp");
+    return this.http.get("http://192.168.4.1/temp");
   }
 
 

@@ -32,7 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
     NgxSliderModule,
     HttpClientModule,
   ],
-  providers: [ BLE,Vibration,WifiWizard2],
+  providers: [ BLE,Vibration,WifiWizard2, ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

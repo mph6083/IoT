@@ -20,17 +20,28 @@ export class DeviceManagerService {
         });
       });
       this.wifi.wifi_isEnabled().then(() => {
-        Geolocation.requestPermissions().then((locationdata) => {
-          console.log(locationdata)
-          this.wifi.wifi_scanNetworks().then((data) => {
-            console.log(data);
-          });
+        console.log("wifi enabled");
+        this.wifi.wifi_isConnected().then( (data) => {
+          console.log(data);
         });
+        this.wifi.wifi_scanNetworks().then((data) => {
+          console.log(data)
+          for(let device of data){
+            console.log(device);
+            this.addWifiHostDevice(device);
+          }
+        });
+
       });
     });
 
   }
-
+  private addWifiHostDevice(device:Device){
+    console.log(device)
+    if(device.UUID == "Mhyland Heater"){
+      this.deviceList.set(device.UUID, device);
+    }
+  }
   private addBleDevice(device: Device) {
     if (device.productName == "Mhyland Heater") {
       this.deviceList.set(device.UUID, device); //TODO: add local merge capabilities
