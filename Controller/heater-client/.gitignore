@@ -45,3 +45,5 @@ Thumbs.db
 /android
 /ios
 package-lock.json
+
+/src/app/secure/secure.ts
