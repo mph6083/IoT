@@ -40,7 +40,7 @@
     <div id="content">
       <h1>Devices:</h1>
       <div *ngFor="let device of devices">
-        <ion-card (click)="openHeater(device.UUID)">
+        <ion-card (click)="openHeater(device)">
           <div class="typeLogo">
             <ion-icon *ngIf="device.deviceType == 0" name="bluetooth-outline"></ion-icon>
             <ion-icon *ngIf="device.deviceType == 1" name="wifi-outline"></ion-icon>
